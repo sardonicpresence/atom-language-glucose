@@ -1,0 +1,63 @@
+'scopeName': 'source.glucose'
+'name': 'Glucose'
+'fileTypes': [
+  'glc'
+]
+'patterns': [
+  {
+    'comment': 'definition'
+    'begin': '^[\\p{Word}&&\\P{Digit}][\\p{Word}]*'
+    'end': '='
+    'beginCaptures': '0': 'name': 'entity.name.function.glucose'
+    'endCaptures': '0': 'name': 'keyword.operator.definition.glucose'
+    'name': 'meta.definition.glucose'
+  }
+  {
+    'comment': 'lambda'
+    'begin': '\\\\'
+    'end': '->'
+    'beginCaptures': '0': 'name': 'keyword.operator.lambda.glucose'
+    'endCaptures': '0': 'name': 'keyword.operator.arrow.glucose'
+    'patterns': [{ 'include': '#argument' }]
+    'name': 'meta.lambda.glucose'
+  }
+  {
+    'include': '#numeric-literal'
+  }
+  {
+    'include': '#identifier'
+  }
+]
+'repository':
+  'identifier':
+    'patterns': [
+      {
+        'match': '([\\p{Word}&&\\P{Digit}][\\p{Word}]*)'
+        'name': 'variable.glucose'
+      }
+    ]
+  'argument':
+    'patterns': [
+      {
+        'match': '([\\p{Word}&&\\P{Digit}][\\p{Word}]*)'
+        'name': 'variable.parameter.glucose'
+      }
+    ]
+  'operator':
+    'patterns': [
+      {
+        'match': '([~!@#$%^&*-+=<>.?:]+)'
+        'name': 'keyword.operator.glucose'
+      }
+    ]
+  'numeric-literal':
+    'patterns': [
+      {
+        'match': '[0-9]+\\.[0-9]+(e-?[0-9]+)?'
+        'name': 'constant.numeric.float.glucose'
+      }
+      {
+        'match': '[0-9]+(e[0-9]+)?'
+        'name': 'constant.numeric.integer.glucose'
+      }
+    ]

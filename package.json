@@ -1,10 +1,18 @@
 {
   "name": "language-glucose",
+  "main": "index.coffee",
   "version": "0.0.4",
   "description": "Glucose language support in Atom",
   "license": "MIT",
   "repository": "https://github.com/sardonicpresence/atom-language-glucose",
   "engines": {
     "atom": "*"
+  },
+  "providedServices": {
+    "linter": {
+      "versions": {
+        "2.0.0": "provideLinter"
+      }
+    }
   }
 }

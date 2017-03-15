@@ -5,11 +5,20 @@
 ]
 'patterns': [
   {
+    'comment': 'type'
+    'begin': '^type\\s'
+    'end': '='
+    'beginCaptures': '0': 'name': 'keyword.other.type.glucose'
+    'endCaptures': '0': 'name': 'keyword.operator.assignment.glucose'
+    'contentName': 'entity.name.type.glucose'
+    'name': 'meta.declaration.type.glucose'
+  }
+  {
     'comment': 'definition'
     'begin': '^[\\p{Word}&&\\P{Digit}][\\p{Word}]*'
     'end': '='
     'beginCaptures': '0': 'name': 'entity.name.function.glucose'
-    'endCaptures': '0': 'name': 'keyword.operator.definition.glucose'
+    'endCaptures': '0': 'name': 'keyword.operator.assignment.glucose'
     'name': 'meta.definition.glucose'
   }
   {
@@ -46,7 +55,7 @@
   'operator':
     'patterns': [
       {
-        'match': '([~!@#$%^&*-+=<>.?:]+)'
+        'match': '([~!@#$%^&|*-+=<>.?:]+)'
         'name': 'keyword.operator.glucose'
       }
     ]

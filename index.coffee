@@ -29,12 +29,12 @@ parseErrors = (file, response) ->
   trimmed = response.trim()
   parts = trimmed.split ':'
   for i in [0..parts.length-1] by 3
-    [line, pos, text] = parts.slice i, 3
+    [line, pos, text] = parts[i..i+2]
     start = [line-1, pos-1]
+    end = [line-1, +pos]
     text = text.trim()
     severity: 'error'
     location:
       file: file
-      position: [start, start]
-    excerpt: text.split('\n')[0]
-    description: text.replace '\n', '<br>'
+      position: [start, end]
+    excerpt: text

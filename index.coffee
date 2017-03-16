@@ -1,23 +1,40 @@
+{spawn, execSync} = require 'child_process'
+
 module.exports =
   provideLinter: ->
+    root = 'c:\\code\\glucose' # TODO
+    glucose = (execSync 'stack path --local-install-root', { cwd: root, encoding: 'utf8' } ).trim() + '\\bin\\glucose.exe'
+    console.log "glucose: " + glucose
     name: 'glucose'
     scope: 'file'
     lintsOnChange: true
     grammarScopes: ['source.glucose']
     lint: (editor) ->
-      console.log "Linting " + editor.getPath()
-      new Promise (resolve) -> resolve [
-        severity: 'error'
-        location:
-          file: editor.getPath()
-          position: [[3, 0], [3, 3]]
-        excerpt: 'An error'
-        description: 'It\'s just a fake error okay?'
-      ,
-        severity: 'warning'
-        location:
-          file: editor.getPath()
-          position: [[13, 5], [13, 10]]
-        excerpt: 'A warning'
-        description: 'It\'s just a fake warning okay?'
-      ]
+      file = editor.getPath()
+      content = editor.getText()
+      console.log "Linting " + file + " (" + content.length + " characters)..."
+      new Promise (resolve) ->
+        process = spawn glucose, [],
+          cwd: root
+          stdio: ['pipe', 'ignore', 'pipe']
+        process.stdin.end content, "utf8"
+        response = ''
+        process.stderr.setEncoding 'utf8'
+        process.stderr.on 'data', (chunk) -> response += chunk
+        process.stderr.on 'end', -> resolve (parseErrors file, response)
+
+parseErrors = (file, response) ->
+  if !response
+    return []
+  trimmed = response.trim()
+  parts = trimmed.split ':'
+  for i in [0..parts.length-1] by 3
+    [line, pos, text] = parts.slice i, 3
+    start = [line-1, pos-1]
+    text = text.trim()
+    severity: 'error'
+    location:
+      file: file
+      position: [start, start]
+    excerpt: text.split('\n')[0]
+    description: text.replace '\n', '<br>'

@@ -27,14 +27,16 @@ parseErrors = (file, response) ->
   if !response
     return []
   trimmed = response.trim()
-  parts = trimmed.split ':'
-  for i in [0..parts.length-1] by 3
-    [line, pos, text] = parts[i..i+2]
-    start = [line-1, pos-1]
-    end = [line-1, +pos]
-    text = text.trim()
+  [line, pos, text...] = trimmed.split ':'
+  if (isNaN line) || (isNaN pos)
+    return []
+  start = [line-1, pos-1]
+  end = [line-1, +pos]
+  text = text.join(':').trim()
+  [
     severity: 'error'
     location:
       file: file
       position: [start, end]
     excerpt: text
+  ]

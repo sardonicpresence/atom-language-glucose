@@ -6,19 +6,27 @@
 'patterns': [
   {
     'comment': 'type'
-    'begin': '^type\\s'
-    'end': '='
-    'beginCaptures': '0': 'name': 'keyword.other.type.glucose'
-    'endCaptures': '0': 'name': 'keyword.operator.assignment.glucose'
-    'contentName': 'entity.name.type.glucose'
+    'begin': '^(type)\\b'
+    'end': '^(?!\\s|\\s*$)'
+    'beginCaptures':
+      '1': 'name': 'keyword.other.type.glucose'
+    'patterns': [
+      { 'include': '#identifier' }
+      { 'include': '#assign' }
+      { 'include': '#pipe' }
+    ]
     'name': 'meta.declaration.type.glucose'
   }
   {
     'comment': 'definition'
-    'begin': '^[\\p{Word}&&\\P{Digit}][\\p{Word}]*'
-    'end': '='
-    'beginCaptures': '0': 'name': 'entity.name.function.glucose'
-    'endCaptures': '0': 'name': 'keyword.operator.assignment.glucose'
+    'begin': '^([\\p{Word}&&\\P{Digit}][\\p{Word}]*)\\b'
+    'end': '^(?!\\s|\\s*$)'
+    'beginCaptures':
+      '1': 'name': 'entity.name.function.glucose'
+    'patterns': [
+      { 'include': '#type-annotation' }
+      { 'include': '#expression' }
+    ]
     'name': 'meta.definition.glucose'
   }
   {
@@ -30,35 +38,46 @@
     'patterns': [{ 'include': '#argument' }]
     'name': 'meta.lambda.glucose'
   }
-  {
-    'include': '#numeric-literal'
-  }
-  {
-    'include': '#identifier'
-  }
 ]
 'repository':
+  'type-annotation':
+    'begin': '[^~!@#$%^&|*-+=<>.?:](:)'
+    'end': '^(?!\\s|\\s*$)'
+    'beginCaptures':
+      '1': 'name': 'keyword.operator.type.glucose'
+    'patterns': [
+      { 'include': '#colon' }
+      { 'include': '#arrow' }
+      { 'include': '#identifier' }
+    ]
+    'name': 'meta.definition.type.glucose'
+  'expression':
+    'patterns': [
+      { 'include': '#identifier' }
+      { 'include': '#operator' }
+      { 'include': '#numeric-literal' }
+    ]
+  'arrow':
+    'match': '(?<![~!@#$%^&|*-+=<>.?:])->(?![~!@#$%^&|*-+=<>.?:])'
+    'name': 'keyword.operator.arrow.glucose'
   'identifier':
-    'patterns': [
-      {
-        'match': '([\\p{Word}&&\\P{Digit}][\\p{Word}]*)'
-        'name': 'variable.glucose'
-      }
-    ]
+    'match': '([\\p{Word}&&\\P{Digit}][\\p{Word}]*)'
+    'name': 'variable.glucose'
   'argument':
-    'patterns': [
-      {
-        'match': '([\\p{Word}&&\\P{Digit}][\\p{Word}]*)'
-        'name': 'variable.parameter.glucose'
-      }
-    ]
+    'match': '([\\p{Word}&&\\P{Digit}][\\p{Word}]*)'
+    'name': 'variable.parameter.glucose'
+  'assign':
+    'match': '(?<![~!@#$%^&|*-+=<>.?:])=(?![~!@#$%^&|*-+=<>.?:])'
+    'name': 'keyword.operator.assignment.glucose'
+  'colon':
+    'match': '(?<![~!@#$%^&|*-+=<>.?:]):(?![~!@#$%^&|*-+=<>.?:])'
+    'name': 'keyword.operator.type.glucose'
+  'pipe':
+    'match': '(?<![~!@#$%^&|*-+=<>.?:])\\|(?![~!@#$%^&|*-+=<>.?:])'
+    'name': 'punctuation.separator.pipe.glucose'
   'operator':
-    'patterns': [
-      {
-        'match': '([~!@#$%^&|*-+=<>.?:]+)'
-        'name': 'keyword.operator.glucose'
-      }
-    ]
+    'match': '([~!@#$%^&|*-+=<>.?:]+)'
+    'name': 'keyword.operator.glucose'
   'numeric-literal':
     'patterns': [
       {
